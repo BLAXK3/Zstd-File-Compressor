@@ -10,7 +10,7 @@ public class CompressPanel extends javax.swing.JPanel {
         setSize(500,500);
         add(uiControls.labelMode(mode));
         add(uiControls.scrollPaneAllFile());
-        add(uiControls.textFieldPath(350, 35));
+        add(uiControls.textFieldPath());
         add(uiControls.buttonSelect()[0]);
 
         switch (mode) {

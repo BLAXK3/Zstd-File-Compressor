@@ -14,6 +14,8 @@ public class MainFrame extends javax.swing.JFrame {
     private JMenu[] menu;
     private JMenuBar menuBar;
     private JMenuItem[] menuItemMode;
+    private JMenuItem menuItemHelp;
+    private JMenuItem menuItemTools;
     private JPanel framePanel;
 
     public MainFrame() {
@@ -38,6 +40,12 @@ public class MainFrame extends javax.swing.JFrame {
                 new JMenuItem("Decompress")
         };
         Arrays.stream(menuItemMode).forEach(menu[0]::add);
+
+        menuItemTools = new JMenuItem("Setting");
+        menu[1].add(menuItemTools);
+
+        menuItemHelp = new JMenuItem("Github");
+        menu[2].add(menuItemHelp);
 
         CardLayout cardLayout = new CardLayout();
 
