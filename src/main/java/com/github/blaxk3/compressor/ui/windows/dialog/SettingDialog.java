@@ -1,4 +1,6 @@
-package com.github.blaxk3.compressor.ui;
+package com.github.blaxk3.compressor.ui.windows.dialog;
+
+import com.github.blaxk3.compressor.ui.controls.SettingsDialogControls;
 
 import java.awt.FlowLayout;
 import java.awt.GridBagConstraints;
@@ -11,7 +13,8 @@ import javax.swing.border.TitledBorder;
 
 public class SettingDialog extends javax.swing.JDialog {
 
-    private final SettingsDialogControls settingsDialogControls = new SettingsDialogControls();
+    SettingsDialogControls settingsDialogControls = new SettingsDialogControls();
+
     private JPanel buttonPanePanel;
     private JPanel dictSourcePanePanel;
     private JPanel optionPanePanel;
@@ -19,7 +22,7 @@ public class SettingDialog extends javax.swing.JDialog {
 
     public SettingDialog() {
         setTitle("Settings");
-        setSize(500,300);
+        setSize(500,250);
         setModal(true);
         setResizable(false);
         setLocationRelativeTo(null);

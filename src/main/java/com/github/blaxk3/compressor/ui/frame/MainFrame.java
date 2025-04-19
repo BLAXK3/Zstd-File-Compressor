@@ -1,4 +1,7 @@
-package com.github.blaxk3.compressor.ui;
+package com.github.blaxk3.compressor.ui.frame;
+
+import com.github.blaxk3.compressor.ui.containers.panel.CompressPanel;
+import com.github.blaxk3.compressor.ui.containers.panel.DecompressPanel;
 
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
@@ -15,13 +18,13 @@ public class MainFrame extends javax.swing.JFrame {
     private JMenuBar menuBar;
     private JMenuItem[] menuItemMode;
     private JMenuItem menuItemHelp;
-    private JMenuItem menuItemTools;
+    private JMenuItem[] menuItemTools;
     private JPanel framePanel;
 
     public MainFrame() {
         setIconImage(new javax.swing.ImageIcon(Objects.requireNonNull(getClass().getResource("/icon/image/icon.png"))).getImage());
         setTitle("Zstd File Compressor");
-        setSize(500, 500);
+        setSize(500, 400);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setResizable(false);
         setLocationRelativeTo(null);
@@ -41,8 +44,11 @@ public class MainFrame extends javax.swing.JFrame {
         };
         Arrays.stream(menuItemMode).forEach(menu[0]::add);
 
-        menuItemTools = new JMenuItem("Setting");
-        menu[1].add(menuItemTools);
+        menuItemTools = new JMenuItem[] {
+                new JMenuItem("Create Dictionary"),
+                new JMenuItem("Settings")
+        };
+        Arrays.stream(menuItemTools).forEach(menu[1]::add);
 
         menuItemHelp = new JMenuItem("Github");
         menu[2].add(menuItemHelp);
@@ -54,7 +60,7 @@ public class MainFrame extends javax.swing.JFrame {
         setJMenuBar(menuBar);
 
         framePanel = new JPanel(cardLayout);
-        framePanel.add(new CompressPanel("Compress"), "Compress Panel");
+        framePanel.add(new CompressPanel(), "Compress Panel");
         framePanel.add(new DecompressPanel(), "Decompress Panel");
 
         add(framePanel, BorderLayout.CENTER);
