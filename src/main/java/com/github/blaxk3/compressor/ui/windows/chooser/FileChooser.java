@@ -1,55 +1,55 @@
 package com.github.blaxk3.compressor.ui.windows.chooser;
 
-import com.github.blaxk3.compressor.ui.windows.optionpane.AlertMessage;
+import com.github.blaxk3.compressor.ui.process.CompressPanelProcess;
 
+import javax.swing.filechooser.FileFilter;
 import java.io.File;
-import java.util.Arrays;
 
 public class FileChooser extends javax.swing.JFileChooser {
 
-    public FileChooser(String opt, boolean dict) {
-        if (opt.equals("file")) {
-            /*
-            * Path of Dictionary
-            * */
-            if (dict) {
-                setFileSelectionMode(FILES_ONLY);
-                File selectedFiles = getSelectedFile();
-                if (showOpenDialog(null) == APPROVE_OPTION) {
-                    System.out.println(selectedFiles);
-                }
+    public FileChooser(boolean isFile, boolean isDict) {
+        applyExtensionFilter();
+        setAcceptAllFileFilterUsed(false);
+
+        if (isFile) {
+            selectFile(isDict);
+        } else {
+            selectFolder();
+        }
+    }
+
+    private void applyExtensionFilter() {
+        setFileFilter(new FileFilter() {
+            @Override
+            public boolean accept(File file) {
+                return file.isDirectory() || (file.getName().contains(".") && !file.getName().endsWith("."));
             }
-            /*
-            * Path of file
-            * */
-            else {
-                setMultiSelectionEnabled(true);
-                setFileSelectionMode(FILES_ONLY);
-                if (showOpenDialog(null) == APPROVE_OPTION) {
-                    File[] selectedFiles = getSelectedFiles();
-                    Arrays.stream(selectedFiles).forEach(file -> System.out.println(file.getName()));
-                }
+
+            @Override
+            public String getDescription() {
+                return "Files with Extensions Only";
+            }
+        });
+    }
+
+    private void selectFile(boolean isDict) {
+        setFileSelectionMode(FILES_ONLY);
+        if (showOpenDialog(null) == APPROVE_OPTION) {
+            File selectedFile = getSelectedFile();
+
+            if (isDict) {
+                CompressPanelProcess.checkInputDict(selectedFile.getAbsolutePath());
+            } else {
+                CompressPanelProcess.checkInputFile(selectedFile.getAbsolutePath());
             }
         }
-        /*
-         * Path of Folder
-         * */
-        else {
-            setFileSelectionMode(DIRECTORIES_ONLY);
-            if (showOpenDialog(null) == APPROVE_OPTION) {
-                File selectedFolder = getSelectedFile();
-                System.out.println("Folder select" + selectedFolder.getAbsolutePath());
+    }
 
-                File[] files = selectedFolder.listFiles();
-
-                if (files != null) {
-                    Arrays.stream(files)
-                            .filter(File::isFile)
-                            .forEach(file -> System.out.println(file.getName()));
-                } else {
-                    AlertMessage.fileNotFound(true, false);
-                }
-            }
+    private void selectFolder() {
+        setFileSelectionMode(DIRECTORIES_ONLY);
+        if (showOpenDialog(null) == APPROVE_OPTION) {
+            File selectedFolder = getSelectedFile();
+            CompressPanelProcess.checkInputFile(selectedFolder.getAbsolutePath());
         }
     }
 }

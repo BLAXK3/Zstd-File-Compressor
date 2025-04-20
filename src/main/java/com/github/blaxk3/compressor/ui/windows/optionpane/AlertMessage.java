@@ -2,12 +2,12 @@ package com.github.blaxk3.compressor.ui.windows.optionpane;
 
 public class AlertMessage extends javax.swing.JOptionPane {
 
-    public static void fileNotFound(boolean file, boolean empty) {
-        if (empty) {
+    public static void fileNotFound(boolean isFile, boolean isEmpty) {
+        if (isEmpty) {
             showMessageDialog(null, "Please select or enter your file/folder path", "Error", ERROR_MESSAGE);
         }
         else {
-            if (file) {
+            if (isFile) {
                 showMessageDialog(null, "File not found", "Error", ERROR_MESSAGE);
             }
             else {
@@ -15,5 +15,4 @@ public class AlertMessage extends javax.swing.JOptionPane {
             }
         }
     }
-
 }

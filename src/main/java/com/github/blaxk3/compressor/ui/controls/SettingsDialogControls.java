@@ -1,11 +1,7 @@
-/*
- *
- * Every ui swing controls of SettingDialog class
- *
- */
-
 package com.github.blaxk3.compressor.ui.controls;
 
+import com.github.blaxk3.compressor.ui.frame.MainFrame;
+import com.github.blaxk3.compressor.ui.windows.chooser.FileChooser;
 import static com.github.blaxk3.compressor.ui.controls.CompressPanelControls.setControlsSize;
 
 import java.awt.Font;
@@ -26,7 +22,27 @@ public class SettingsDialogControls {
     private JCheckBox checkBoxTrainDict;
     private JCheckBox checkBoxDeleteFile;
     private JComboBox<String> comboBoxCompressLevel;
-    private JTextField textFieldDictPath;
+    private static JTextField textFieldDictPath;
+
+    public static void setTextFieldDictPath(String path) {
+        SettingsDialogControls.textFieldDictPath.setText(path);
+    }
+
+    public static String getTextFieldDictPath() {
+        return textFieldDictPath.getText();
+    }
+
+    public JButton getButtonOK() {
+        return buttonOK;
+    }
+
+    public JButton getButtonSave() {
+        return buttonSave;
+    }
+
+    public JButton getButtonCancel() {
+        return buttonCancel;
+    }
 
     public JLabel labelDict() {
         return new JLabel("Dictionary : ");
@@ -37,7 +53,7 @@ public class SettingsDialogControls {
     }
 
     public JLabel labelCheckBoxDeleteFile() {
-        return new JLabel("Delete file after compression");
+        return new JLabel("Delete file after compression/decompression");
     }
 
     public JLabel labelCheckBoxTrainDict() {
@@ -65,12 +81,17 @@ public class SettingsDialogControls {
     public JButton buttonSelectDict() {
         this.buttonSelectDict = new JButton("...");
         buttonSelectDict.setPreferredSize(setControlsSize(50, 25));
+        buttonSelectDict.addActionListener(e -> new FileChooser(true, true));
         return buttonSelectDict;
     }
 
     public JCheckBox checkBoxTrainDict() {
         this.checkBoxTrainDict = new JCheckBox();
         checkBoxTrainDict.setPreferredSize(setControlsSize(20, 20));
+        if(MainFrame.getCurrentPanel().equals("Decompress")) {
+            checkBoxTrainDict.setEnabled(false);
+            return checkBoxTrainDict;
+        }
         return checkBoxTrainDict;
     }
 
@@ -81,20 +102,25 @@ public class SettingsDialogControls {
     }
 
     public JTextField textFieldDictPath() {
-        this.textFieldDictPath = new JTextField();
+        textFieldDictPath = new JTextField();
         textFieldDictPath.setFont(new Font("Arial", Font.PLAIN, 15));
         textFieldDictPath.setPreferredSize(setControlsSize(0, 25));
+        textFieldDictPath.setEditable(false);
         return textFieldDictPath;
     }
 
     public JComboBox<String> getComboBoxCompressLevel() {
         this.comboBoxCompressLevel = new JComboBox<>();
         comboBoxCompressLevel.setPreferredSize(setControlsSize(150, 25));
+        if (MainFrame.getCurrentPanel().equals("Decompress")) {
+            comboBoxCompressLevel.setEnabled(false);
+            return comboBoxCompressLevel;
+        }
         new CompressLevelLoader(comboBoxCompressLevel).execute();
         return comboBoxCompressLevel;
     }
 
-    private class CompressLevelLoader extends SwingWorker<Void, String> {
+    private static class CompressLevelLoader extends SwingWorker<Void, String> {
 
         private final JComboBox<String> comboBox;
 

@@ -19,7 +19,11 @@ public class DecompressPanelControls extends CompressPanelControls{
     private static JTextField textFieldPath;
 
     public static String getTextFieldPath() {
-        return textFieldPath.getText();
+        return DecompressPanelControls.textFieldPath.getText();
+    }
+
+    public static void setTextFieldPath(String path) {
+        DecompressPanelControls.textFieldPath.setText(path);
     }
 
     @Override
@@ -38,6 +42,7 @@ public class DecompressPanelControls extends CompressPanelControls{
         return textFieldPath;
     }
 
+
     @Override
     public JButton[] buttonSelect() {
         this.button = new JButton[] {
@@ -48,8 +53,8 @@ public class DecompressPanelControls extends CompressPanelControls{
         };
         Arrays.stream(button).forEach(b -> b.setPreferredSize(setControlsSize(110, 35)));
         button[0].addActionListener(e -> new SelectOption());
-        button[1].addActionListener(e -> new FileChooser("file", false));
-        button[2].addActionListener(e -> new FileChooser("folder", false));
+        button[1].addActionListener(e -> new FileChooser(true, false));
+        button[2].addActionListener(e -> new FileChooser(false, false));
         button[3].addActionListener(e -> new SettingDialog());
         return button;
     }
@@ -58,7 +63,7 @@ public class DecompressPanelControls extends CompressPanelControls{
     public JButton buttonConfirm() {
         this.buttonConfirm = new JButton("Decompress");
         buttonConfirm.setPreferredSize(setControlsSize(130, 35));
-        buttonConfirm.addActionListener(e -> CompressPanelProcess.checkInputFile(false));
+        buttonConfirm.addActionListener(e -> CompressPanelProcess.checkInputFile(getTextFieldPath()));
         return buttonConfirm;
     }
 }

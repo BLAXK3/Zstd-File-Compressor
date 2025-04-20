@@ -18,16 +18,27 @@ public class MainFrame extends javax.swing.JFrame {
     private JMenuBar menuBar;
     private JMenuItem[] menuItemMode;
     private JMenuItem menuItemHelp;
-    private JMenuItem[] menuItemTools;
+    private JMenuItem menuItemTools;
     private JPanel framePanel;
+
+    public static String currentPanel;
+
+    public static String getCurrentPanel() {
+        return MainFrame.currentPanel;
+    }
+
+    public void setCurrentPanel(String currentPanel) {
+        MainFrame.currentPanel = currentPanel;
+    }
 
     public MainFrame() {
         setIconImage(new javax.swing.ImageIcon(Objects.requireNonNull(getClass().getResource("/icon/image/icon.png"))).getImage());
         setTitle("Zstd File Compressor");
-        setSize(500, 400);
+        setSize(500, 200);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setResizable(false);
         setLocationRelativeTo(null);
+        setCurrentPanel("Compress");
 
         menuBar = new JMenuBar();
 
@@ -44,26 +55,30 @@ public class MainFrame extends javax.swing.JFrame {
         };
         Arrays.stream(menuItemMode).forEach(menu[0]::add);
 
-        menuItemTools = new JMenuItem[] {
-                new JMenuItem("Create Dictionary"),
-                new JMenuItem("Settings")
-        };
-        Arrays.stream(menuItemTools).forEach(menu[1]::add);
+        menuItemTools = new JMenuItem("Create Dictionary");
+
+        menu[1].add(menuItemTools);
 
         menuItemHelp = new JMenuItem("Github");
         menu[2].add(menuItemHelp);
 
         CardLayout cardLayout = new CardLayout();
 
-        menuItemMode[0].addActionListener(e -> cardLayout.show(framePanel, "Compress Panel"));
-        menuItemMode[1].addActionListener(e -> cardLayout.show(framePanel, "Decompress Panel"));
+        menuItemMode[0].addActionListener(e -> {
+            cardLayout.show(framePanel, "Compress Panel");
+            setCurrentPanel("Compress");
+        });
+        menuItemMode[1].addActionListener(e -> {
+            cardLayout.show(framePanel, "Decompress Panel");
+            setCurrentPanel("Decompress");
+        });
         setJMenuBar(menuBar);
 
         framePanel = new JPanel(cardLayout);
         framePanel.add(new CompressPanel(), "Compress Panel");
         framePanel.add(new DecompressPanel(), "Decompress Panel");
-
         add(framePanel, BorderLayout.CENTER);
+
         setVisible(true);
     }
 }

@@ -1,6 +1,7 @@
 package com.github.blaxk3.compressor.ui.windows.dialog;
 
 import com.github.blaxk3.compressor.ui.controls.SettingsDialogControls;
+import com.github.blaxk3.compressor.ui.process.CompressPanelProcess;
 
 import java.awt.FlowLayout;
 import java.awt.GridBagConstraints;
@@ -10,6 +11,9 @@ import javax.swing.JPanel;
 import javax.swing.border.CompoundBorder;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.TitledBorder;
+
+import static com.github.blaxk3.compressor.ui.controls.SettingsDialogControls.getTextFieldDictPath;
+import static com.github.blaxk3.compressor.ui.controls.SettingsDialogControls.setTextFieldDictPath;
 
 public class SettingDialog extends javax.swing.JDialog {
 
@@ -26,7 +30,9 @@ public class SettingDialog extends javax.swing.JDialog {
         setModal(true);
         setResizable(false);
         setLocationRelativeTo(null);
+        setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         add(designSettingDialogPanePanel());
+        buttonAction();
         setVisible(true);
     }
 
@@ -117,5 +123,19 @@ public class SettingDialog extends javax.swing.JDialog {
         buttonPanePanel.add(settingsDialogControls.buttonSave());
         buttonPanePanel.add(settingsDialogControls.buttonCancel());
         return buttonPanePanel;
+    }
+
+    public void buttonAction() {
+        settingsDialogControls.getButtonOK().addActionListener(e -> {
+            CompressPanelProcess.checkInputDict(getTextFieldDictPath());
+            dispose();
+        });
+        settingsDialogControls.getButtonSave().addActionListener(e -> {
+            dispose();
+        });
+        settingsDialogControls.getButtonCancel().addActionListener(e -> {
+            setTextFieldDictPath("");
+            dispose();
+        });
     }
 }

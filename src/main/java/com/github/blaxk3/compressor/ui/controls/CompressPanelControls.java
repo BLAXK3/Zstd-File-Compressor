@@ -1,9 +1,3 @@
-/*
- *
- * Every ui swing controls of CompressPanel & DecompressPanel class
- *
- */
-
 package com.github.blaxk3.compressor.ui.controls;
 
 import com.github.blaxk3.compressor.ui.process.CompressPanelProcess;
@@ -29,8 +23,12 @@ public class CompressPanelControls {
         return new Dimension(width, height);
     }
 
+    public static void setTextFieldPath(String path) {
+        CompressPanelControls.textFieldPath.setText(path);
+    }
+
     public static String getTextFieldPath() {
-        return textFieldPath.getText();
+        return CompressPanelControls.textFieldPath.getText();
     }
 
     public JLabel labelMode() {
@@ -56,8 +54,8 @@ public class CompressPanelControls {
         };
         Arrays.stream(button).forEach(b -> b.setPreferredSize(setControlsSize(110, 35)));
         button[0].addActionListener(e -> new SelectOption());
-        button[1].addActionListener(e -> new FileChooser("file", false));
-        button[2].addActionListener(e -> new FileChooser("folder", false));
+        button[1].addActionListener(e -> new FileChooser(true, false));
+        button[2].addActionListener(e -> new FileChooser(false, false));
         button[3].addActionListener(e -> new SettingDialog());
         return button;
     }
@@ -65,7 +63,7 @@ public class CompressPanelControls {
     public JButton buttonConfirm() {
         this.buttonConfirm = new JButton("Compress");
         buttonConfirm.setPreferredSize(setControlsSize(130, 35));
-        buttonConfirm.addActionListener(e -> CompressPanelProcess.checkInputFile(true));
+        buttonConfirm.addActionListener(e -> CompressPanelProcess.checkInputFile(getTextFieldPath()));
         return buttonConfirm;
     }
 }
