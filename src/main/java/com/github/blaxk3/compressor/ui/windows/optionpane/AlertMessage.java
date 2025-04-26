@@ -15,4 +15,16 @@ public class AlertMessage extends javax.swing.JOptionPane {
             }
         }
     }
+
+    public static void complete(String mode) {
+        showMessageDialog(null, "File " + mode + " successfully", "Complete", INFORMATION_MESSAGE);
+    }
+
+    public static void failed(String mode, String file) {
+        showMessageDialog(null, "Unable to" + mode + " " + file, "Failed", ERROR_MESSAGE);
+    }
+
+    public static void failedTraining() {
+        showMessageDialog(null, "Failed to train dictionary", "Failed", ERROR_MESSAGE);
+    }
 }

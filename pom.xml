@@ -6,7 +6,7 @@
 
     <groupId>com.github.blaxk3</groupId>
     <artifactId>ZFC</artifactId>
-    <version>0.13.04</version>
+    <version>0.26.04</version>
 
     <properties>
         <maven.compiler.source>24</maven.compiler.source>

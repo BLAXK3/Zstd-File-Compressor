@@ -1,6 +1,7 @@
 package com.github.blaxk3.compressor.ui.windows.chooser;
 
-import com.github.blaxk3.compressor.ui.process.CompressPanelProcess;
+import com.github.blaxk3.compressor.ui.frame.MainFrame;
+import com.github.blaxk3.compressor.ui.process.CheckInputFile;
 
 import javax.swing.filechooser.FileFilter;
 import java.io.File;
@@ -27,7 +28,7 @@ public class FileChooser extends javax.swing.JFileChooser {
 
             @Override
             public String getDescription() {
-                return "Files with Extensions Only";
+                return "All Files (*.*)";
             }
         });
     }
@@ -38,9 +39,9 @@ public class FileChooser extends javax.swing.JFileChooser {
             File selectedFile = getSelectedFile();
 
             if (isDict) {
-                CompressPanelProcess.checkInputDict(selectedFile.getAbsolutePath());
+                CheckInputFile.checkInputDict(selectedFile.getAbsolutePath(), MainFrame.getOutputStatus());
             } else {
-                CompressPanelProcess.checkInputFile(selectedFile.getAbsolutePath());
+                CheckInputFile.checkInputFile(selectedFile.getAbsolutePath());
             }
         }
     }
@@ -49,7 +50,7 @@ public class FileChooser extends javax.swing.JFileChooser {
         setFileSelectionMode(DIRECTORIES_ONLY);
         if (showOpenDialog(null) == APPROVE_OPTION) {
             File selectedFolder = getSelectedFile();
-            CompressPanelProcess.checkInputFile(selectedFolder.getAbsolutePath());
+            CheckInputFile.checkInputFile(selectedFolder.getAbsolutePath());
         }
     }
 }
