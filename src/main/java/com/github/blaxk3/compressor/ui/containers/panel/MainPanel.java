@@ -1,6 +1,6 @@
 package com.github.blaxk3.compressor.ui.containers.panel;
 
-import com.github.blaxk3.compressor.api.zstd.mode.compress.ZstdProcess;
+import com.github.blaxk3.compressor.api.zstd.process.ZstdProcess;
 import com.github.blaxk3.compressor.ui.frame.MainFrame;
 import com.github.blaxk3.compressor.ui.process.CheckInputFile;
 import com.github.blaxk3.compressor.ui.windows.chooser.FileChooser;

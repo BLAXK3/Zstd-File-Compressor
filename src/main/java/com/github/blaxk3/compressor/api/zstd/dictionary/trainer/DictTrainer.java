@@ -17,14 +17,10 @@ public class DictTrainer {
         try {
             List<Path> sampleFiles = new ArrayList<>();
 
-            if (path.isDirectory()) {
-                File[] files = path.listFiles(File::isFile);
-                assert files != null;
-                for (File file : files) {
-                    sampleFiles.add(file.toPath());
-                }
-            } else {
-                sampleFiles.add(path.toPath());
+            File[] files = path.listFiles(File::isFile);
+            assert files != null;
+            for (File file : files) {
+                sampleFiles.add(file.toPath());
             }
 
             ZstdDictTrainer trainer = new ZstdDictTrainer(dictSize * 100, dictSize * 1024, level);

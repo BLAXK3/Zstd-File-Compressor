@@ -1,4 +1,4 @@
-package com.github.blaxk3.compressor.api.zstd.mode.compress;
+package com.github.blaxk3.compressor.api.zstd.process;
 
 import com.github.blaxk3.compressor.api.zstd.dictionary.trainer.DictTrainer;
 import com.github.blaxk3.compressor.ui.windows.dialog.SettingDialog;
