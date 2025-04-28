@@ -33,7 +33,7 @@ public class DictTrainer {
             byte[] dict = trainer.trainSamples();
 
             if (output == null) {
-                Files.write(path.toPath().resolve("trained_dictionary.dict"), "testes".getBytes());
+                Files.write(path.toPath().resolve("trained_dictionary.dict"), dict);
                 return;
             }
 
