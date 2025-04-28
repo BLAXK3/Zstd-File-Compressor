@@ -34,7 +34,12 @@ public class FileChooser extends javax.swing.JFileChooser {
     }
 
     private void selectFile(boolean isDict) {
-        setFileSelectionMode(FILES_ONLY);
+        if (isDict) {
+            setFileSelectionMode(FILES_ONLY);
+        }
+        else {
+            setFileSelectionMode(DIRECTORIES_ONLY);
+        }
         if (showOpenDialog(null) == APPROVE_OPTION) {
             File selectedFile = getSelectedFile();
 

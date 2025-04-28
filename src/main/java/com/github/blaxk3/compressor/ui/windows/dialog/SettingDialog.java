@@ -14,36 +14,30 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.swing.JButton;
-import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.SwingWorker;
-import javax.swing.border.CompoundBorder;
-import javax.swing.border.EmptyBorder;
-import javax.swing.border.TitledBorder;
+import javax.swing.text.AbstractDocument;
+import javax.swing.text.AttributeSet;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.DocumentFilter;
 
 public class SettingDialog extends javax.swing.JDialog {
 
     private JButton buttonSelectDict;
     private JButton buttonOK;
-    private JButton buttonSave;
     private JButton buttonCancel;
-    private JCheckBox checkBoxTrainDict;
     private static JComboBox<String> comboBoxCompressLevel;
     private JLabel labelSource;
     private JPanel buttonPanePanel;
     private JPanel dictSourcePanePanel;
-    private JPanel optionPanePanel;
     private JPanel mainDesignPanel;
     private static JTextField textFieldDictPath = new JTextField();
+    private static JTextField textFieldDictSize = new JTextField();
 
     private static boolean usingDict;
-
-    public static boolean isUsingDict() {
-        return usingDict;
-    }
 
     public void setUsingDict(boolean usingDict) {
         SettingDialog.usingDict = usingDict;
@@ -51,6 +45,10 @@ public class SettingDialog extends javax.swing.JDialog {
 
     public static String getTextFieldDictPath() {
         return SettingDialog.textFieldDictPath.getText();
+    }
+
+    public static int getTextFieldDictSize() {
+        return Integer.parseInt(SettingDialog.textFieldDictSize.getText());
     }
 
     public static void setTextFieldDictPath(String path) {
@@ -70,29 +68,20 @@ public class SettingDialog extends javax.swing.JDialog {
         return 11;
     }
 
-    public void setDisableUI() {
-        SettingDialog.comboBoxCompressLevel.setEnabled(false);
-        this.checkBoxTrainDict.setEnabled(false);
-    }
-
     public void setLabelSource(String mode) {
         this.labelSource.setText(mode);
     }
 
     public SettingDialog() {
         setTitle("Settings");
-        setSize(500,250);
+        setSize(500,200);
         setResizable(false);
         setModal(true);
         setLocationRelativeTo(null);
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         add(designSettingDialogPanePanel());
-        if (MainFrame.getCurrentMode().equals("Decompress")) {
-            setDisableUI();
-        }
         if (MainFrame.getCurrentMode().equals("Dictionary")) {
-            setLabelSource("Output file : ");
-            setSize(500, 200);
+            setLabelSource("Output file (Optional) : ");
         }
     }
 
@@ -107,10 +96,6 @@ public class SettingDialog extends javax.swing.JDialog {
         gbc.fill = GridBagConstraints.BOTH;
         gbc.insets = new Insets(2, 4, 2, 4);
         mainDesignPanel.add(dictSourcePanePanel(), gbc);
-        if (!MainFrame.getCurrentMode().equals("Dictionary")) {
-            gbc.gridy++;
-            mainDesignPanel.add(optionPanePanel(), gbc);
-        }
         gbc.gridy++;
         mainDesignPanel.add(buttonPanePanel(), gbc);
         return mainDesignPanel;
@@ -122,17 +107,24 @@ public class SettingDialog extends javax.swing.JDialog {
         gbc.gridx = 0;
         gbc.gridy = 0;
         gbc.anchor = GridBagConstraints.WEST;
-        labelSource = new JLabel("Dictionary : ");
+        labelSource = new JLabel("Dictionary (Optional) : ");
         dictSourcePanePanel.add(labelSource, gbc);
 
-        gbc.gridy++;
-        dictSourcePanePanel.add(new JLabel("Compression level : "), gbc);
+        if (!MainFrame.getCurrentMode().equals("Decompress")) {
+            gbc.gridy++;
+            dictSourcePanePanel.add(new JLabel("Compression level : "), gbc);
+        }
+
+        if (MainFrame.getCurrentMode().equals("Dictionary")) {
+            gbc.gridy++;
+            dictSourcePanePanel.add(new JLabel("Dictionary Size (KB) : "), gbc);
+        }
 
         gbc.gridx++;
-        gbc.gridy--;
+        gbc.gridy = 0;
         gbc.weightx = 1;
         gbc.fill = GridBagConstraints.HORIZONTAL;
-        textFieldDictPath.setFont(new Font("Arial", Font.PLAIN, 15));
+        textFieldDictPath.setFont(new Font("Arial", Font.PLAIN, 12));
         textFieldDictPath.setPreferredSize(new Dimension(0, 25));
         dictSourcePanePanel.add(textFieldDictPath, gbc);
 
@@ -140,45 +132,33 @@ public class SettingDialog extends javax.swing.JDialog {
         gbc.weightx = 0;
         buttonSelectDict = new JButton("...");
         buttonSelectDict.setPreferredSize(new Dimension(50, 25));
-        buttonSelectDict.addActionListener(e -> new FileChooser(true, true));
+        if (MainFrame.getCurrentMode().equals("Dictionary")) {
+            buttonSelectDict.addActionListener(e -> new FileChooser(true, false));
+        }
+        else {
+            buttonSelectDict.addActionListener(e -> new FileChooser(true, true));
+        }
         dictSourcePanePanel.add(buttonSelectDict, gbc);
 
-        gbc.gridx--;
-        gbc.gridy++;
-        gbc.insets = new Insets(5, 0, 5, 0);
-        gbc.fill = GridBagConstraints.NONE;
-        comboBoxCompressLevel = new JComboBox<>();
-        comboBoxCompressLevel.setPreferredSize(new Dimension(150, 25));
-        new SettingDialog.CompressLevelLoader(comboBoxCompressLevel).execute();
-        dictSourcePanePanel.add(comboBoxCompressLevel, gbc);
+        if (!MainFrame.getCurrentMode().equals("Decompress")) {
+            gbc.gridx--;
+            gbc.gridy++;
+            gbc.insets = new Insets(5, 0, 5, 0);
+            gbc.fill = GridBagConstraints.NONE;
+            comboBoxCompressLevel = new JComboBox<>();
+            comboBoxCompressLevel.setPreferredSize(new Dimension(150, 25));
+            new SettingDialog.CompressLevelLoader(comboBoxCompressLevel).execute();
+            dictSourcePanePanel.add(comboBoxCompressLevel, gbc);
+        }
+
+        if (MainFrame.getCurrentMode().equals("Dictionary")) {
+            gbc.gridy++;
+            textFieldDictSize.setFont(new Font("Arial", Font.PLAIN, 12));
+            textFieldDictSize.setPreferredSize(new Dimension(100, 25));
+            ((AbstractDocument) textFieldDictSize.getDocument()).setDocumentFilter(new NumericFilter());
+            dictSourcePanePanel.add(textFieldDictSize, gbc);
+        }
         return dictSourcePanePanel;
-    }
-
-    public JPanel optionPanePanel() {
-        optionPanePanel = new JPanel(new GridBagLayout());
-        optionPanePanel.setBorder(new CompoundBorder(new TitledBorder("Options"), new EmptyBorder(12, 0, 0, 0)));
-
-        JPanel oppPanel = new JPanel(new GridBagLayout());
-        GridBagConstraints gbc = new GridBagConstraints();
-        gbc.gridx = 0;
-        gbc.gridy = 0;
-        gbc.anchor = GridBagConstraints.WEST;
-        checkBoxTrainDict = new JCheckBox();
-        checkBoxTrainDict.setPreferredSize(new Dimension(20, 20));
-        checkBoxTrainDict.setEnabled(true);
-        oppPanel.add(checkBoxTrainDict, gbc);
-
-        gbc.gridx++;
-        gbc.weightx = 1;
-        oppPanel.add(new JLabel("Create dictionary from file (Auto) (Compress Mode)"), gbc);
-
-        gbc.gridx = 0;
-        gbc.gridy = 0;
-        gbc.gridwidth = GridBagConstraints.REMAINDER;
-        gbc.fill = GridBagConstraints.HORIZONTAL;
-        gbc.insets = new Insets(4, 4, 4, 4);
-        optionPanePanel.add(oppPanel, gbc);
-        return optionPanePanel;
     }
 
     public JPanel buttonPanePanel() {
@@ -200,14 +180,6 @@ public class SettingDialog extends javax.swing.JDialog {
 
         });
 
-        buttonSave = new JButton("Save");
-        buttonSave.setPreferredSize(new Dimension(130, 40));
-        buttonSave.addActionListener(e -> {
-            if (CheckInputFile.checkInputDict(getTextFieldDictPath(), false)) {
-                dispose();
-            }
-        });
-
         buttonCancel = new JButton("Cancel");
         buttonCancel.setPreferredSize(new Dimension(130, 40));
         buttonCancel.addActionListener(e -> {
@@ -218,17 +190,12 @@ public class SettingDialog extends javax.swing.JDialog {
 
         buttonPanePanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
         buttonPanePanel.add(buttonOK);
-        buttonPanePanel.add(buttonSave);
         buttonPanePanel.add(buttonCancel);
         return buttonPanePanel;
     }
 
-    public void loadSaveSettings() {
 
-    }
-
-    private static class CompressLevelLoader extends SwingWorker<Void, String> {
-
+    private class CompressLevelLoader extends SwingWorker<Void, String> {
         private final JComboBox<String> comboBox;
 
         public CompressLevelLoader(JComboBox<String> comboBox) {
@@ -257,6 +224,27 @@ public class SettingDialog extends javax.swing.JDialog {
             for (String level : chunks) {
                 comboBox.addItem(level);
             }
+        }
+    }
+
+    private class NumericFilter extends DocumentFilter {
+        @Override
+        public void insertString(FilterBypass fb, int offset, String string, AttributeSet attr) throws BadLocationException {
+            if (string != null && string.matches("\\d+")) {
+                super.insertString(fb, offset, string, attr);
+            }
+        }
+
+        @Override
+        public void replace(FilterBypass fb, int offset, int length, String text, AttributeSet attrs) throws BadLocationException {
+            if (text != null && text.matches("\\d+")) {
+                super.replace(fb, offset, length, text, attrs);
+            }
+        }
+
+        @Override
+        public void remove(FilterBypass fb, int offset, int length) throws BadLocationException {
+            super.remove(fb, offset, length);
         }
     }
 }

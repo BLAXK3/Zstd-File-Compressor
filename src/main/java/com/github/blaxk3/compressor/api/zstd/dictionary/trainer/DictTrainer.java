@@ -2,6 +2,7 @@ package com.github.blaxk3.compressor.api.zstd.dictionary.trainer;
 
 import com.github.blaxk3.compressor.ui.windows.optionpane.AlertMessage;
 import com.github.luben.zstd.ZstdDictTrainer;
+import com.github.luben.zstd.ZstdException;
 
 import java.io.File;
 import java.io.IOException;
@@ -12,7 +13,7 @@ import java.util.List;
 
 public class DictTrainer {
 
-    public DictTrainer(File path) {
+    public DictTrainer(File path, int dictSize, int level, File output) {
         try {
             List<Path> sampleFiles = new ArrayList<>();
 
@@ -22,16 +23,11 @@ public class DictTrainer {
                 for (File file : files) {
                     sampleFiles.add(file.toPath());
                 }
-            }
-            else {
+            } else {
                 sampleFiles.add(path.toPath());
             }
 
-            int dictSize = 10 * 1024;
-            int sampleSize = dictSize * 100;
-            int level = 5;
-
-            ZstdDictTrainer trainer = new ZstdDictTrainer(sampleSize, dictSize, level);
+            ZstdDictTrainer trainer = new ZstdDictTrainer(dictSize * 100, dictSize * 1024, level);
 
             for (Path file : sampleFiles) {
                 byte[] data = Files.readAllBytes(file);
@@ -40,13 +36,15 @@ public class DictTrainer {
 
             byte[] dict = trainer.trainSamples();
 
-            Path outputDir = path.isDirectory() ? path.toPath() : path.getParentFile().toPath();
-            Path dictOutput = outputDir.resolve("trained_dictionary.dict");
+            if (output == null) {
+                Files.write(path.toPath().resolve("trained_dictionary.dict"), "testes".getBytes());
+                return;
+            }
 
-            Files.write(dictOutput, dict);
-        } catch (IOException e) {
+            Files.write(output.toPath().resolve("trained_dictionary.dict"), dict);
+
+        } catch (ZstdException | IOException e) {
             AlertMessage.failedTraining();
         }
     }
 }
-

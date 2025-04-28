@@ -85,8 +85,6 @@ public class MainPanel extends JPanel {
         buttonMode = new JButton("Compress");
         buttonMode.setPreferredSize(new Dimension(130, 40));
         buttonMode.addActionListener(e -> {
-            System.out.println(SettingDialog.getTextFieldDictPath());
-
             if (CheckInputFile.checkInputFile(getTextFieldPath())) {
                 displayFile(new File(getTextFieldPath()));
                 new ZstdProcess(new File(getTextFieldPath()), SettingDialog.getComboBoxCompressLevel(), new File(SettingDialog.getTextFieldDictPath()), MainFrame.getCurrentMode());
@@ -115,6 +113,9 @@ public class MainPanel extends JPanel {
 
         buttonSelectFile = new JButton("File");
         buttonSelectFile.setPreferredSize(new Dimension(110, 40));
+        if (MainFrame.getCurrentMode().equals("Dictionary")) {
+            buttonSelectFile.setEnabled(false);
+        }
         buttonSelectFile.addActionListener(e -> new FileChooser(true, false));
 
         buttonSelectFolder = new JButton("Folder");

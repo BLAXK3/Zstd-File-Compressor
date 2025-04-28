@@ -51,7 +51,7 @@ public class CheckInputFile {
         }
         File pathInput = new File(path);
 
-        if (output && !pathInput.getParentFile().exists()) {
+        if (output && !pathInput.exists()) {
             AlertMessage.fileNotFound(false, false);
             return false;
         }
