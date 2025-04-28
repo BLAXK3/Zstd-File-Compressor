@@ -45,6 +45,12 @@ For safety, if you are using compression with dictionary, it's recommended to ba
 - [zstd-jni](https://github.com/luben/zstd-jni) (version 1.5.7-2)
 - [commons-io](https://github.com/apache/commons-io) (version 2.19.0)
 
+#Future Updates (Maybe)
+- Add own file signature
+- Add checksum
+- Update compress/decompress method
+- Update dictionary trainer method
+
 # Requirements
 
 - **JDK 24 or higher** is required to run this program
