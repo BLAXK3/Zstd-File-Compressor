@@ -13,6 +13,8 @@ A tool for compressing and decompressing files using the [Zstandard](https://fac
 
 # Usage
 
+Download exe/jar from this [Release](https://github.com/BLAXK3/Zstd-File-Compressor/releases/tag/0.26.04)
+
 **1.** You can select the compression and decompression mode by selecting Mode and Dictionary Trainer by selecting Tools in the menu bar
 
 **2.** In the empty field you can enter the file or folder path or you can press the select button to select the files or folders you want in compression or decompression mode
